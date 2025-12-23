@@ -1,0 +1,24 @@
+### Project-specific
+openspec/
+.codex/sdd/
+
+### Rust
+target/
+**/*.rs.bk
+
+### Cargo build artifacts
+**/Cargo.lock.bak
+
+### Logs
+*.log
+
+### OS files
+.DS_Store
+Thumbs.db
+
+### Editor/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
