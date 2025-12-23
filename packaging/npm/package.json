@@ -1,6 +1,6 @@
 {
   "name": "codex-sdd",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Spec-driven development workflow for Codex CLI",
   "license": "MIT",
   "bin": {
@@ -10,11 +10,11 @@
     "bin/codex-sdd.js"
   ],
   "optionalDependencies": {
-    "@codex-sdd/darwin-arm64": "1.0.2",
-    "@codex-sdd/darwin-x64": "1.0.2",
-    "@codex-sdd/linux-x64": "1.0.2",
-    "@codex-sdd/linux-arm64": "1.0.2",
-    "@codex-sdd/win32-x64": "1.0.2"
+    "@codex-sdd/darwin-arm64": "1.0.3",
+    "@codex-sdd/darwin-x64": "1.0.3",
+    "@codex-sdd/linux-x64": "1.0.3",
+    "@codex-sdd/linux-arm64": "1.0.3",
+    "@codex-sdd/win32-x64": "1.0.3"
   },
   "engines": {
     "node": ">=18"
