@@ -8,6 +8,7 @@ target/
 
 ### Node
 node_modules/
+packaging/npm-platforms/**/bin/codex-sdd*
 
 ### Cargo build artifacts
 **/Cargo.lock.bak

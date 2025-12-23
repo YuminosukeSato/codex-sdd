@@ -55,6 +55,8 @@ Why npm -g as the primary path?
 - `npm install -g` is explicitly documented as global mode, which is easy to explain for CI/internal environments. (npm docs)
 
 ### Homebrew (macOS/Linux)
+Homebrew support is still in progress. Please use npm or Cargo for now.
+
 ```bash
 brew tap <owner>/tap
 brew install codex-sdd

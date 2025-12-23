@@ -22,7 +22,8 @@ function resolveBinary() {
   try {
     const pkgJson = require.resolve(path.join(pkg, "package.json"));
     const pkgDir = path.dirname(pkgJson);
-    const binPath = path.join(pkgDir, "bin", "codex-sdd");
+    const binName = process.platform === "win32" ? "codex-sdd.exe" : "codex-sdd";
+    const binPath = path.join(pkgDir, "bin", binName);
     return binPath;
   } catch (err) {
     return null;
@@ -31,8 +32,8 @@ function resolveBinary() {
 
 const bin = resolveBinary();
 if (!bin) {
-  console.error("codex-sdd バイナリが見つかりません。対応するプラットフォームのパッケージを明示的にインストールしてください。");
-  console.error("例: npm install -g @codex-sdd/darwin-arm64");
+  console.error("codex-sdd binary not found. Install the matching platform package explicitly.");
+  console.error("Example: npm install -g @codex-sdd/darwin-arm64");
   process.exit(1);
 }
 

@@ -6,6 +6,9 @@
   "bin": {
     "codex-sdd": "bin/codex-sdd.js"
   },
+  "files": [
+    "bin/codex-sdd.js"
+  ],
   "optionalDependencies": {
     "@codex-sdd/darwin-arm64": "1.0.0",
     "@codex-sdd/darwin-x64": "1.0.0",

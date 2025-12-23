@@ -1,0 +1,21 @@
+{
+  "name": "@codex-sdd/darwin-x64",
+  "version": "1.0.0",
+  "description": "codex-sdd binary for darwin x64",
+  "license": "MIT",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "bin": {
+    "codex-sdd": "bin/codex-sdd"
+  },
+  "files": [
+    "bin/codex-sdd"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

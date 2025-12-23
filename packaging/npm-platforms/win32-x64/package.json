@@ -1,0 +1,21 @@
+{
+  "name": "@codex-sdd/win32-x64",
+  "version": "1.0.0",
+  "description": "codex-sdd binary for win32 x64",
+  "license": "MIT",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "bin": {
+    "codex-sdd": "bin/codex-sdd.exe"
+  },
+  "files": [
+    "bin/codex-sdd.exe"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

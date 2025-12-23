@@ -1,0 +1,21 @@
+{
+  "name": "@codex-sdd/linux-arm64",
+  "version": "1.0.0",
+  "description": "codex-sdd binary for linux arm64",
+  "license": "MIT",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "bin": {
+    "codex-sdd": "bin/codex-sdd"
+  },
+  "files": [
+    "bin/codex-sdd"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
