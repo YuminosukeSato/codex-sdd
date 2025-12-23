@@ -25,7 +25,6 @@ jobs:
           import json
           import os
           import pathlib
-          import re
           import sys
 
           tag = os.environ["TAG"]
@@ -33,11 +32,16 @@ jobs:
             raise SystemExit("Tag must start with v, e.g. v1.0.0")
           version = tag[1:]
 
-          cargo_text = pathlib.Path("Cargo.toml").read_text()
-          match = re.search(r'(?m)^version\\s*=\\s*"([^"]+)"', cargo_text)
-          if not match:
+          try:
+            import tomllib
+          except ModuleNotFoundError as exc:
+            raise SystemExit("Python 3.11+ is required for tomllib") from exc
+
+          cargo_bytes = pathlib.Path("Cargo.toml").read_bytes()
+          cargo_data = tomllib.loads(cargo_bytes)
+          cargo_version = cargo_data.get("package", {}).get("version")
+          if not cargo_version:
             raise SystemExit("Cargo.toml version not found")
-          cargo_version = match.group(1)
 
           meta_version = json.loads(pathlib.Path("packaging/npm/package.json").read_text())["version"]
           platform_paths = [
