@@ -157,7 +157,10 @@ pub fn render_context_placeholders() -> Vec<(String, String)> {
             "README.md".to_string(),
             "# Context\n\nThis folder holds indexes and supporting materials.\n".to_string(),
         ),
-        ("repo_tree.txt".to_string(), "(auto-generated)\n".to_string()),
+        (
+            "repo_tree.txt".to_string(),
+            "(auto-generated)\n".to_string(),
+        ),
         ("file_index.json".to_string(), "{}\n".to_string()),
     ]
 }
