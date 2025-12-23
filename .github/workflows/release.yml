@@ -37,8 +37,8 @@ jobs:
           except ModuleNotFoundError as exc:
             raise SystemExit("Python 3.11+ is required for tomllib") from exc
 
-          cargo_bytes = pathlib.Path("Cargo.toml").read_bytes()
-          cargo_data = tomllib.loads(cargo_bytes)
+          cargo_text = pathlib.Path("Cargo.toml").read_text()
+          cargo_data = tomllib.loads(cargo_text)
           cargo_version = cargo_data.get("package", {}).get("version")
           if not cargo_version:
             raise SystemExit("Cargo.toml version not found")
