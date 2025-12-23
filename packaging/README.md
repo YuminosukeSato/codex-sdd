@@ -4,7 +4,8 @@
 
 - Meta-package `codex-sdd` provides a JS shim (`bin/codex-sdd.js`).
 - Platform-specific binaries are distributed via `optionalDependencies` (e.g. `@codex-sdd/darwin-arm64`).
-- インストール時の自動ダウンロードは行いません。バイナリが無い場合は明示的に該当パッケージを追加します。
+- npm is the primary distribution path for global installs.
+- No auto-download happens at install time; if the binary is missing, install the matching platform package explicitly.
 
 ## Homebrew
 

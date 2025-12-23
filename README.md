@@ -28,15 +28,9 @@ SDD helps teams make changes explicit, reviewable, and reproducible. codex-sdd p
 - Optional: Node.js 18+ for npm-based installation
 
 ## Install
-Choose one of the following methods.
+We recommend npm for global installs and upgrades. Other options are available if npm is not a fit.
 
-### Homebrew (macOS/Linux)
-```bash
-brew tap <owner>/tap
-brew install codex-sdd
-```
-
-### npm (Node 18+)
+### npm (Node 18+) — recommended
 ```bash
 npm install -g codex-sdd
 ```
@@ -53,6 +47,17 @@ npm install -g @codex-sdd/linux-arm64
 
 # Windows
 npm install -g @codex-sdd/win32-x64
+```
+
+Why npm -g as the primary path?
+- Codex CLI itself is officially documented with both npm and Homebrew; npm global install/upgrade is a first-class path. (OpenAI Developers)
+- npm `bin` entries are linked into the global PATH on `-g` installs, which fits CLI distribution well. (npm docs)
+- `npm install -g` is explicitly documented as global mode, which is easy to explain for CI/internal environments. (npm docs)
+
+### Homebrew (macOS/Linux)
+```bash
+brew tap <owner>/tap
+brew install codex-sdd
 ```
 
 ### Cargo (from source or git)
