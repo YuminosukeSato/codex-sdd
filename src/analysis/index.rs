@@ -126,7 +126,7 @@ fn is_binary(path: &Path) -> Result<bool> {
     let mut file = File::open(path).with_context(|| format!("open {}", path.display()))?;
     let mut buf = [0u8; 1024];
     let read = file.read(&mut buf).unwrap_or(0);
-    Ok(buf[..read].iter().any(|b| *b == 0))
+    Ok(buf[..read].contains(&0))
 }
 
 fn hash_file(path: &Path) -> Result<String> {
@@ -187,7 +187,7 @@ pub fn shard_files(index: &FileIndex, shards: usize) -> Vec<Vec<FileEntry>> {
         return vec![];
     }
     let total = index.files.len();
-    let chunk = (total + shards - 1) / shards;
+    let chunk = total.div_ceil(shards);
     let mut out = Vec::new();
     for i in 0..shards {
         let start = i * chunk;

@@ -201,7 +201,9 @@ fn cmd_plans(args: PlansArgs) -> Result<()> {
 
     {
         let change_state = state.change_state_mut(&change_id);
-        change_state.file_hashes = index_result.file_hashes.clone();
+        change_state
+            .file_hashes
+            .clone_from(&index_result.file_hashes);
         change_state.file_index_hash = Some(index_result.index_hash.clone());
         change_state.file_index_generated_at = Some(now_rfc3339());
     }
@@ -447,7 +449,7 @@ fn cmd_worktrees(args: WorktreesArgs) -> Result<()> {
 fn cmd_test_plan(args: TestPlanArgs) -> Result<()> {
     log_event("info", "test-plan start");
     let paths = RepoPaths::load()?;
-    let mut state = State::load(&paths.state_path)?;
+    let state = State::load(&paths.state_path)?;
     let change_id = resolve_change_id(&state, args.id.as_deref())?;
     state.require_approved(&change_id)?;
     state.save(&paths.state_path)?;
@@ -873,7 +875,7 @@ fn resolve_base_ref(repo_root: &Path, requested: Option<&str>) -> Result<String>
         return Ok(base.to_string());
     }
     let default = "origin/main";
-    if let Ok(_) = crate::git::worktree::ensure_base_ref(repo_root, default) {
+    if crate::git::worktree::ensure_base_ref(repo_root, default).is_ok() {
         return Ok(default.to_string());
     }
     Ok("HEAD~1".to_string())

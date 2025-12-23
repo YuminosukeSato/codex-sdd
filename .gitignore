@@ -6,6 +6,9 @@ openspec/
 target/
 **/*.rs.bk
 
+### Node
+node_modules/
+
 ### Cargo build artifacts
 **/Cargo.lock.bak
 

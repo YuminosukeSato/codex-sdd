@@ -14,11 +14,8 @@ pub struct GlobalPaths {
 #[derive(Clone, Debug)]
 pub struct RepoPaths {
     pub repo_root: PathBuf,
-    pub codex_home: PathBuf,
     pub docs_sdd: PathBuf,
-    pub docs_specs: PathBuf,
     pub docs_changes: PathBuf,
-    pub codex_sdd: PathBuf,
     pub state_path: PathBuf,
     pub runs_dir: PathBuf,
     pub worktrees_dir: PathBuf,
@@ -58,22 +55,17 @@ impl GlobalPaths {
 impl RepoPaths {
     pub fn load() -> Result<Self> {
         let repo_root = git_repo_root()?;
-        let codex_home = resolve_codex_home()?;
         let docs_sdd = repo_root.join("docs/sdd");
-        let docs_specs = docs_sdd.join("specs");
         let docs_changes = docs_sdd.join("changes");
-        let codex_sdd = repo_root.join(".codex/sdd");
-        let state_path = codex_sdd.join("state.json");
-        let runs_dir = codex_sdd.join("runs");
-        let worktrees_dir = codex_sdd.join("worktrees");
-        let schemas_dir = codex_sdd.join("schemas");
+        let codex_sdd_dir = repo_root.join(".codex/sdd");
+        let state_path = codex_sdd_dir.join("state.json");
+        let runs_dir = codex_sdd_dir.join("runs");
+        let worktrees_dir = codex_sdd_dir.join("worktrees");
+        let schemas_dir = codex_sdd_dir.join("schemas");
         Ok(Self {
             repo_root,
-            codex_home,
             docs_sdd,
-            docs_specs,
             docs_changes,
-            codex_sdd,
             state_path,
             runs_dir,
             worktrees_dir,
@@ -87,7 +79,6 @@ impl RepoPaths {
     }
 
     pub fn find_change_dir(&self, change_id: &str) -> Result<PathBuf> {
-        let prefix = format!("{}", change_id);
         let entries = std::fs::read_dir(&self.docs_changes)
             .with_context(|| format!("read {}", self.docs_changes.display()))?;
         for entry in entries {
@@ -98,7 +89,7 @@ impl RepoPaths {
             }
             let name = entry.file_name();
             let name = name.to_string_lossy();
-            if name.starts_with(&format!("{}_", prefix)) {
+            if name.starts_with(&format!("{change_id}_")) {
                 return Ok(entry.path());
             }
         }

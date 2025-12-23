@@ -82,9 +82,7 @@ impl State {
     }
 
     pub fn change_state_mut(&mut self, change_id: &str) -> &mut ChangeState {
-        self.changes
-            .entry(change_id.to_string())
-            .or_insert_with(ChangeState::default)
+        self.changes.entry(change_id.to_string()).or_default()
     }
 
     pub fn change_state(&self, change_id: &str) -> Option<&ChangeState> {

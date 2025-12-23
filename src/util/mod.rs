@@ -1,10 +1,10 @@
 use std::fs;
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::{Command, Output, Stdio};
 
 use anyhow::{anyhow, Context, Result};
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -51,16 +51,6 @@ pub fn write_file_if_missing(path: &Path, contents: &str) -> Result<bool> {
     Ok(true)
 }
 
-pub fn run_cmd(mut cmd: Command) -> Result<Output> {
-    cmd.stdout(Stdio::piped()).stderr(Stdio::piped());
-    let output = cmd.output().with_context(|| "run command")?;
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        return Err(anyhow!("command failed: {stderr}"));
-    }
-    Ok(output)
-}
-
 pub fn run_cmd_allow_fail(mut cmd: Command) -> Result<Output> {
     cmd.stdout(Stdio::piped()).stderr(Stdio::piped());
     let output = cmd.output().with_context(|| "run command")?;
@@ -105,31 +95,6 @@ pub fn normalize_path(path: &Path) -> Result<String> {
     Ok(s.replace('\\', "/"))
 }
 
-pub fn parse_time(ts: &str) -> Result<DateTime<Utc>> {
-    DateTime::parse_from_rfc3339(ts)
-        .map(|dt| dt.with_timezone(&Utc))
-        .with_context(|| format!("parse time {ts}"))
-}
-
 pub fn read_to_string(path: &Path) -> Result<String> {
     fs::read_to_string(path).with_context(|| format!("read {}", path.display()))
-}
-
-pub fn copy_if_missing(from: &Path, to: &Path) -> Result<bool> {
-    if to.exists() {
-        return Ok(false);
-    }
-    if let Some(parent) = to.parent() {
-        ensure_dir(parent)?;
-    }
-    fs::copy(from, to).with_context(|| format!("copy {} -> {}", from.display(), to.display()))?;
-    Ok(true)
-}
-
-pub fn join_paths(parts: &[&str]) -> PathBuf {
-    let mut buf = PathBuf::new();
-    for part in parts {
-        buf.push(part);
-    }
-    buf
 }

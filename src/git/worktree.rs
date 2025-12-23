@@ -30,24 +30,6 @@ pub fn create_worktree(repo_root: &Path, branch: &str, path: &Path) -> Result<()
     Ok(())
 }
 
-pub fn list_worktrees(repo_root: &Path) -> Result<Vec<String>> {
-    let mut cmd = Command::new("git");
-    cmd.current_dir(repo_root)
-        .args(["worktree", "list", "--porcelain"]);
-    let output = run_cmd_allow_fail(cmd)?;
-    if !output.status.success() {
-        return Err(anyhow!("git worktree list failed"));
-    }
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let mut paths = Vec::new();
-    for line in stdout.lines() {
-        if let Some(path) = line.strip_prefix("worktree ") {
-            paths.push(path.to_string());
-        }
-    }
-    Ok(paths)
-}
-
 pub fn git_diff_numstat(repo_root: &Path, base: &str) -> Result<(u64, u64)> {
     let mut cmd = Command::new("git");
     cmd.current_dir(repo_root).args(["diff", "--numstat", base]);

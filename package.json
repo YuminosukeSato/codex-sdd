@@ -1,0 +1,7 @@
+{
+  "name": "codex-sdd-workspace",
+  "private": true,
+  "workspaces": [
+    "packaging/npm"
+  ]
+}
