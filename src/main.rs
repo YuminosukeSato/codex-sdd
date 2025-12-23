@@ -246,15 +246,18 @@ fn cmd_plans(args: PlansArgs) -> Result<()> {
         };
 
         let shard_key = shard_name.clone();
-        handles.push(std::thread::spawn(move || -> Result<(String, String, bool)> {
-            let result = crate::codex::exec::run(&exec_spec)?;
-            Ok((shard_key, shard_hash_val, result.status_ok))
-        }));
+        handles.push(std::thread::spawn(
+            move || -> Result<(String, String, bool)> {
+                let result = crate::codex::exec::run(&exec_spec)?;
+                Ok((shard_key, shard_hash_val, result.status_ok))
+            },
+        ));
     }
 
     for handle in handles {
-        let (shard_key, shard_hash_val, ok) =
-            handle.join().map_err(|_| anyhow!("reader thread failed"))??;
+        let (shard_key, shard_hash_val, ok) = handle
+            .join()
+            .map_err(|_| anyhow!("reader thread failed"))??;
         if !ok {
             return Err(anyhow!("reader agent failed"));
         }
@@ -392,10 +395,7 @@ fn cmd_check(args: CheckArgs) -> Result<()> {
     }
 
     let code_changed = changed.iter().any(|p| {
-        p.starts_with("src/")
-            || p.starts_with("tests/")
-            || p == "Cargo.toml"
-            || p == "Cargo.lock"
+        p.starts_with("src/") || p.starts_with("tests/") || p == "Cargo.toml" || p == "Cargo.lock"
     });
 
     if code_changed {
@@ -403,7 +403,9 @@ fn cmd_check(args: CheckArgs) -> Result<()> {
             .iter()
             .any(|p| p.starts_with("docs/sdd/specs/") && p.ends_with(".md"));
         if !required_specs {
-            return Err(anyhow!("code変更には docs/sdd/specs/<spec>.md の更新が必要です"));
+            return Err(anyhow!(
+                "code変更には docs/sdd/specs/<spec>.md の更新が必要です"
+            ));
         }
 
         let (decision_ok, tasks_ok, test_plan_ok) = required_artifacts(&changed);
@@ -475,7 +477,8 @@ fn cmd_test_plan(args: TestPlanArgs) -> Result<()> {
             .join(format!("test_plan_prompt_{agent}.md"));
         write_string(&prompt_path, &prompt)?;
 
-        let (output_path, json_path) = output_paths(&paths.runs_dir, &change_id, &format!("test_plan_{agent}"));
+        let (output_path, json_path) =
+            output_paths(&paths.runs_dir, &change_id, &format!("test_plan_{agent}"));
         let exec_spec = ExecSpec {
             cwd: worktree_path.clone(),
             prompt_path: prompt_path.clone(),
@@ -505,7 +508,11 @@ fn cmd_test_plan(args: TestPlanArgs) -> Result<()> {
                     .join(&change_id)
                     .join(format!("coverage_{agent}.txt"));
                 write_string(&out_path, &cov.stdout)?;
-                (cov.percent, Some(out_path.to_string_lossy().to_string()), "tarpaulin".to_string())
+                (
+                    cov.percent,
+                    Some(out_path.to_string_lossy().to_string()),
+                    "tarpaulin".to_string(),
+                )
             }
             _ => {
                 let cov = run_llvm_cov(&worktree_path)?;
@@ -514,7 +521,11 @@ fn cmd_test_plan(args: TestPlanArgs) -> Result<()> {
                     .join(&change_id)
                     .join(format!("coverage_{agent}.txt"));
                 write_string(&out_path, &cov.stdout)?;
-                (cov.percent, Some(out_path.to_string_lossy().to_string()), "llvm-cov".to_string())
+                (
+                    cov.percent,
+                    Some(out_path.to_string_lossy().to_string()),
+                    "llvm-cov".to_string(),
+                )
             }
         };
 
@@ -549,7 +560,9 @@ fn cmd_select(args: ChangeArgs) -> Result<()> {
 
     let metrics_path = paths.runs_dir.join(&change_id).join("metrics.json");
     if !metrics_path.exists() {
-        return Err(anyhow!("metrics が見つかりません。先に test-plan を実行してください"));
+        return Err(anyhow!(
+            "metrics が見つかりません。先に test-plan を実行してください"
+        ));
     }
     let data = read_to_string(&metrics_path)?;
     let metrics: Vec<VariantMetrics> = serde_json::from_str(&data)?;
@@ -579,8 +592,14 @@ fn cmd_select(args: ChangeArgs) -> Result<()> {
     let risk_flag = detect_risk(&change_dir.join("20_review.md"));
 
     let mut summary = String::from("# Selection Summary\n\n");
-    summary.push_str(&format!("- tasks_completion: {:.1}%\n", tasks_completion * 100.0));
-    summary.push_str(&format!("- risk_flag: {}\n\n", if risk_flag { "あり" } else { "なし" }));
+    summary.push_str(&format!(
+        "- tasks_completion: {:.1}%\n",
+        tasks_completion * 100.0
+    ));
+    summary.push_str(&format!(
+        "- risk_flag: {}\n\n",
+        if risk_flag { "あり" } else { "なし" }
+    ));
     summary.push_str("## Variants\n");
     for v in &variants {
         summary.push_str(&format!(
@@ -605,10 +624,7 @@ fn cmd_finalize(args: FinalizeArgs) -> Result<()> {
     state.require_approved(&change_id)?;
 
     let change_dir = paths.find_change_dir(&change_id)?;
-    let worktree_path = paths
-        .worktrees_dir
-        .join(&change_id)
-        .join(&args.agent);
+    let worktree_path = paths.worktrees_dir.join(&change_id).join(&args.agent);
     if worktree_path.exists() {
         if let Some(base_commit) = state
             .change_state(&change_id)
@@ -632,7 +648,11 @@ fn cmd_finalize(args: FinalizeArgs) -> Result<()> {
         _ => merge_branch(&paths.repo_root, &branch, true)?,
     }
 
-    let archive_name = format!("{}-{}", chrono::Utc::now().format("%Y-%m-%d"), change_dir.file_name().unwrap().to_string_lossy());
+    let archive_name = format!(
+        "{}-{}",
+        chrono::Utc::now().format("%Y-%m-%d"),
+        change_dir.file_name().unwrap().to_string_lossy()
+    );
     let archive_dir = paths.docs_sdd.join("archive").join(archive_name);
     move_dir(&change_dir, &archive_dir)?;
 
@@ -786,7 +806,9 @@ fn render_reader_prompt(change_id: &str, idx: usize, total: usize, shard: &[File
     for entry in shard {
         out.push_str(&format!("- {}\n", entry.path));
     }
-    out.push_str("\n以下を日本語で簡潔にまとめてください:\n- 役割\n- 公開API\n- リスク\n- テスト観点\n");
+    out.push_str(
+        "\n以下を日本語で簡潔にまとめてください:\n- 役割\n- 公開API\n- リスク\n- テスト観点\n",
+    );
     out
 }
 
@@ -817,7 +839,9 @@ fn required_artifacts(changed: &[String]) -> (bool, bool, bool) {
         if let Some(rest) = path.strip_prefix("docs/sdd/changes/") {
             let mut parts = rest.split('/');
             if let Some(change_dir) = parts.next() {
-                let entry = by_change.entry(change_dir.to_string()).or_insert((false, false, false));
+                let entry = by_change
+                    .entry(change_dir.to_string())
+                    .or_insert((false, false, false));
                 if path.ends_with("/90_decision.md") {
                     entry.0 = true;
                 }

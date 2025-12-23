@@ -21,7 +21,8 @@ pub struct ExecResult {
 }
 
 pub fn run(spec: &ExecSpec) -> Result<ExecResult> {
-    let prompt_flag = env::var("CODEX_SDD_PROMPT_FLAG").unwrap_or_else(|_| "--prompt-file".to_string());
+    let prompt_flag =
+        env::var("CODEX_SDD_PROMPT_FLAG").unwrap_or_else(|_| "--prompt-file".to_string());
     let extra_args = env::var("CODEX_SDD_EXEC_ARGS").unwrap_or_default();
 
     let mut cmd = Command::new("codex");

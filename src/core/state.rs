@@ -75,8 +75,7 @@ impl State {
 
     pub fn save(&self, path: &Path) -> Result<()> {
         if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)
-                .with_context(|| format!("create {}", parent.display()))?;
+            fs::create_dir_all(parent).with_context(|| format!("create {}", parent.display()))?;
         }
         let data = serde_json::to_string_pretty(self).with_context(|| "serialize state")?;
         write_string(path, &data)

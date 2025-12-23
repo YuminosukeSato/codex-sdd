@@ -88,9 +88,12 @@ fn list_git_files(repo_root: &Path, include_untracked: bool) -> Result<Vec<Strin
 
     if include_untracked {
         let mut untracked_cmd = std::process::Command::new("git");
-        untracked_cmd
-            .current_dir(repo_root)
-            .args(["ls-files", "--others", "--exclude-standard", "-z"]);
+        untracked_cmd.current_dir(repo_root).args([
+            "ls-files",
+            "--others",
+            "--exclude-standard",
+            "-z",
+        ]);
         let untracked = run_cmd_allow_fail(untracked_cmd)?;
         if untracked.status.success() {
             files.extend(split_nul(&untracked.stdout));
@@ -131,7 +134,9 @@ fn hash_file(path: &Path) -> Result<String> {
     let mut hasher = Hasher::new();
     let mut buf = [0u8; 8192];
     loop {
-        let n = file.read(&mut buf).with_context(|| format!("read {}", path.display()))?;
+        let n = file
+            .read(&mut buf)
+            .with_context(|| format!("read {}", path.display()))?;
         if n == 0 {
             break;
         }
