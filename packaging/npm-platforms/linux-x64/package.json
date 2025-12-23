@@ -1,6 +1,6 @@
 {
   "name": "@codex-sdd/linux-x64",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "codex-sdd binary for linux x64",
   "license": "MIT",
   "os": [

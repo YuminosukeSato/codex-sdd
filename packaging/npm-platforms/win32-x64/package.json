@@ -1,6 +1,6 @@
 {
   "name": "@codex-sdd/win32-x64",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "codex-sdd binary for win32 x64",
   "license": "MIT",
   "os": [

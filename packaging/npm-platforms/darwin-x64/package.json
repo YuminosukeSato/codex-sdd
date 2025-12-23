@@ -1,6 +1,6 @@
 {
   "name": "@codex-sdd/darwin-x64",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "codex-sdd binary for darwin x64",
   "license": "MIT",
   "os": [
